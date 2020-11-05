@@ -1,8 +1,20 @@
 import "./Ownable.sol";
+import "./Random.sol";
+
 pragma solidity 0.5.12;
 
-contract Coinflip is Ownable {
+contract Coinflip is Ownable, Random {
     uint public balance;
+
+    struct User {
+        bool betting;
+        bytes32 queryId;
+        uint balance;
+    }
+
+    mapping (address => User) private userMapping;
+    address[] private users;
+
     event balanceAdded(uint amount, uint totalBalance);
     event userWin(uint amount);
     event userLose(uint amount);
@@ -24,19 +36,35 @@ contract Coinflip is Ownable {
        return toTransfer;
    }
 
+   function userExist() private returns(bool){
+       address creator = msg.sender;
+       if (users[creator]) {
+           return true;
+       }
+       return false;
+   }
+
+   function insertUser(User memory newUser) private {
+        address creator = msg.sender;
+        users[creator] = newUser;
+    }
+    function getUser() public view returns(bool betting, bytes32 queryId, uint balance){
+        address creator = msg.sender;
+        return (userMapping[creator].betting, userMapping[creator].queryId, userMapping[creator].balance);
+    }
+
     function bet() public payable returns(uint){
         uint wager = msg.value;
         address payable user = msg.sender;
-        if(random() == 1) {
-            uint prize = wager * 2;
-            balance -= prize;
-            user.transfer(prize);
-            emit userWin(prize);
-            return prize;
+        User memory user;
+        if (userExist()) {
+            (user.betting, user.queryId, user.balance) = getUser();
         } else {
-            balance += wager;
-            emit userLose(wager);
-            return 0;
+            user.betting = false;
+            user.balance = 0;
+            insertUser(user);
+            users.push(msg.sender);
         }
+
     }
 }
