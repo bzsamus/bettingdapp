@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>CoinFlip</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="./web3.min.js"></script>
+    <script type="text/javascript" src="./abi.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">CoinFlip Dapp</h1>
+        <p class="lead">Place a bet for a chance to win 2x ether! </p>
+      </div>
+    </div>
+    <div class="container">
+      <div>
+        <div>
+          <h2>Prize pool</h2>
+          <div>
+            Current balance: <span id="balance_output"></span> eth
+          </div>
+        </div>
+        <h2>Place a bet</h2>
+        <div id="win_alert" class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Congradulation!</strong> You won <span id="win_amount">1</span> eth.
+        </div>
+        <div id="lose_alert" class="alert alert-warning alert-dismissible fade show" role="alert">
+          <strong>You lost</strong> <span id="lose_amount">1</span> eth. Better luck next time.
+        </div>
+        <div id="error_alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error:</strong><span id="error_message"> there are some issues.</span>
+        </div>
+        <div>
+          your wallet address: <span id="wallet_address_output"></span></br>
+          Your wallet balance: <span id="wallet_balance_output"></span> eth
+        </div>
+        Place bet in eth:
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" id="amount_input" placeholder="Bet amount in eth" >
+        </div>
+        <button type="button" id="place_bet_button" class="btn btn-primary">Place Bet</button>
+      </div>
+    </div>
+
+  </body>
+</html>
