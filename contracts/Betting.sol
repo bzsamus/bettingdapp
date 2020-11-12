@@ -44,7 +44,8 @@ contract Betting is Ownable, usingProvable {
                 emit userLose(user.wager);
             }
         }
-        resetUserBet();
+        resetUserBet(userAddress);
+        queryIdMapping[_queryId] = address(0);
     }
 
     function addBalance() public payable onlyOwner {
@@ -132,22 +133,21 @@ contract Betting is Ownable, usingProvable {
         );
     }
 
-    function resetUserBet() private {
-        address creator = msg.sender;
-        userMapping[creator].betting = false;
-        userMapping[creator].wager = 0;
-        userMapping[creator].queryId = '';
+    function resetUserBet(address userAddress) private {
+        userMapping[userAddress].betting = false;
+        userMapping[userAddress].wager = 0;
+        userMapping[userAddress].queryId = '';
         emit userUpdated(
-            userMapping[creator].betting,
-            userMapping[creator].queryId,
-            userMapping[creator].wager,
-            userMapping[creator].balance
+            userMapping[userAddress].betting,
+            userMapping[userAddress].queryId,
+            userMapping[userAddress].wager,
+            userMapping[userAddress].balance
         );
     }
 
-    function getUser() public view returns(bool, bytes32, uint){
+    function getUser() public view returns(bool, bytes32, uint, uint){
         address creator = msg.sender;
-        return (userMapping[creator].betting, userMapping[creator].queryId, userMapping[creator].balance);
+        return (userMapping[creator].betting, userMapping[creator].queryId, userMapping[creator].wager, userMapping[creator].balance);
     }
 
     function placeBet() public payable returns(uint){
@@ -159,10 +159,10 @@ contract Betting is Ownable, usingProvable {
         User memory user;
 
         if (userExist()) {
-            (user.betting, user.queryId, user.balance) = getUser();
+            (user.betting, user.queryId, user.wager, user.balance) = getUser();
         } else {
             insertUser();
-            (user.betting, user.queryId, user.balance) = getUser();
+            (user.betting, user.queryId, user.wager, user.balance) = getUser();
         }
 
         bytes32 queryId = provable_newRandomDSQuery(
