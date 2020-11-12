@@ -37,7 +37,7 @@ contract Betting is Ownable {
             if (randomNumber > 50) {
                 userMapping[userAddress].balance += prize;
                 poolBalance -= prize;
-                emit userWin();
+                emit userWin(prize);
             } else {
                 poolBalance += user.wager;
                 emit userLose(user.wager);
@@ -62,7 +62,10 @@ contract Betting is Ownable {
    function withdrawUserBalance() public payable returns(uint) {
        address userAddress = msg.sender;
        uint toTransfer = userMapping[userAddress].balance;
+       require(toTransfer > 0, "No balance to withdraw");
+       require(poolBalance > toTransfer, "Withdraw balance greater than prize pool");
        userMapping[userAddress].balance = 0;
+       poolBalance -= toTransfer;
        msg.sender.transfer(toTransfer);
        return toTransfer;
    }
@@ -165,7 +168,7 @@ contract Betting is Ownable {
         testRandom(queryId);
     }
 
-    function testGetQueryId() public returns(bytes32) {
+    function testGetQueryId() public view returns(bytes32) {
         return bytes32(keccak256(abi.encodePacked(msg.sender)));
     }
     function testRandom(bytes32 queryId) public {
