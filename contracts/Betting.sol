@@ -1,9 +1,10 @@
 import "./Ownable.sol";
-//import "./provableAPI.sol";
+import "./provableAPI.sol";
 
 pragma solidity 0.5.12;
 
-contract Betting is Ownable {
+contract Betting is Ownable, usingProvable {
+    uint256 constant NUM_RANDOM_BYTES_REQUESTED = 1;
     uint public poolBalance;
 
     struct User {
@@ -27,7 +28,7 @@ contract Betting is Ownable {
     event generateRandomNumber(uint256 randomNumber);
 
     function __callback(bytes32 _queryId, string memory _result, bytes memory proof) public {
-        //require(msg.sender == provable_cbAddress());
+        require(msg.sender == provable_cbAddress());
         uint256 randomNumber = uint256(keccak256(abi.encodePacked(_result))) % 100;
         emit generateRandomNumber(randomNumber);
         address userAddress = queryIdMapping[_queryId];
@@ -150,6 +151,9 @@ contract Betting is Ownable {
     }
 
     function placeBet() public payable returns(uint){
+        uint256 QUERY_EXECUTION_DELAY = 0;
+        uint256 GAS_FOR_CALLBACK = 200000;
+
         uint wager = msg.value;
         address userAddress = msg.sender;
         User memory user;
@@ -160,12 +164,17 @@ contract Betting is Ownable {
             insertUser();
             (user.betting, user.queryId, user.balance) = getUser();
         }
-        bytes32 queryId = testGetQueryId();
+
+        bytes32 queryId = provable_newRandomDSQuery(
+            QUERY_EXECUTION_DELAY,
+            NUM_RANDOM_BYTES_REQUESTED,
+            GAS_FOR_CALLBACK
+        );
+
         updateUserQueryId(queryId);
         updateUserBetting(true, wager);
         queryIdMapping[queryId] = userAddress;
         emit LogNewProvableQuery("Provable query was sent, standing by for answer...");
-        testRandom(queryId);
     }
 
     function testGetQueryId() public view returns(bytes32) {
