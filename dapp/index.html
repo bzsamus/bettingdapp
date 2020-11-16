@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>CoinFlip</title>
+    <title>Eth Betting</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
       crossorigin="anonymous"></script>
@@ -18,7 +18,7 @@
   <body>
     <div class="jumbotron jumbotron-fluid">
       <div class="container">
-        <h1 class="display-4">CoinFlip Dapp</h1>
+        <h1 class="display-4">Ethereum Betting Dapp</h1>
         <p class="lead">Place a bet for a chance to win 2x ether! </p>
       </div>
     </div>
@@ -26,29 +26,37 @@
       <div>
         <div>
           <h2>Prize pool</h2>
-          <div>
+          <div class="container">
             Current balance: <span id="balance_output"></span> eth
           </div>
         </div>
-        <h2>Place a bet</h2>
-        <div id="win_alert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <h2>Your account</h2>
+        <div id="win_alert" class="alert alert-success alert-dismissible fade d-none" role="alert">
           <strong>Congradulation!</strong> You won <span id="win_amount">1</span> eth.
         </div>
-        <div id="lose_alert" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div id="lose_alert" class="alert alert-warning alert-dismissible fade d-none" role="alert">
           <strong>You lost</strong> <span id="lose_amount">1</span> eth. Better luck next time.
         </div>
-        <div id="error_alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div id="error_alert" class="alert alert-danger alert-dismissible fade d-none" role="alert">
           <strong>Error:</strong><span id="error_message"> there are some issues.</span>
         </div>
-        <div>
+        <div class="container">
           your wallet address: <span id="wallet_address_output"></span></br>
-          Your wallet balance: <span id="wallet_balance_output"></span> eth
+          Your wallet balance: <span id="wallet_balance_output"></span> eth</br/>
+          Your winning balance: <span id="winning_balance_output"></span> eth <button type="button" id="withdraw_button" class="btn btn-primary d-none">Withdraw</button>
         </div>
-        Place bet in eth:
-        <div class="input-group mb-3">
-          <input type="text" class="form-control" id="amount_input" placeholder="Bet amount in eth" >
+        <div id="progress_alert" class="alert alert alert-info" role="alert">
+          <span id="progress_message"> You have already placed a bet, waiting for the result...</span><br/>
+          <span>Bet amount:</span><span id="progress_detail"></span><br/>
+          <span>Bet ID:</span><span id="progress_id"></span>
         </div>
-        <button type="button" id="place_bet_button" class="btn btn-primary">Place Bet</button>
+        <div id="betting_div">
+          <h2>Place bet</h2>
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" id="amount_input" placeholder="Bet amount in eth" >
+          </div>
+          <button type="button" id="place_bet_button" class="btn btn-primary">Place Bet</button>
+        </div>
       </div>
     </div>
 
