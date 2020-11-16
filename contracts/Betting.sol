@@ -23,7 +23,7 @@ contract Betting is Ownable, usingProvable {
     event userCreated(address userAddress);
     event userUpdated(bool betting, bytes32 queryId, uint wager, uint balance);
     event userWin(bytes32 queryId, uint amount);
-    event userLose(bytes32, queryId, uint amount);
+    event userLose(bytes32 queryId, uint amount);
     event LogNewProvableQuery(string description);
     event generateRandomNumber(uint256 randomNumber);
 
