@@ -22,8 +22,8 @@ contract Betting is Ownable, usingProvable {
     event balanceAdded(uint amount, uint totalBalance);
     event userCreated(address userAddress);
     event userUpdated(bool betting, bytes32 queryId, uint wager, uint balance);
-    event userWin(uint amount);
-    event userLose(uint amount);
+    event userWin(bytes32 queryId, uint amount);
+    event userLose(bytes32, queryId, uint amount);
     event LogNewProvableQuery(string description);
     event generateRandomNumber(uint256 randomNumber);
 
@@ -38,10 +38,10 @@ contract Betting is Ownable, usingProvable {
             if (randomNumber > 50) {
                 userMapping[userAddress].balance += prize;
                 poolBalance -= prize;
-                emit userWin(prize);
+                emit userWin(_queryId, prize);
             } else {
                 poolBalance += user.wager;
-                emit userLose(user.wager);
+                emit userLose(_queryId, user.wager);
             }
         }
         resetUserBet(userAddress);
