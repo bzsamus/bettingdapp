@@ -1,5 +1,6 @@
 var web3 = new Web3(Web3.givenProvider);
 var contractInstance;
+let user = {};
 
 window.ethereum.on('accountsChanged', function (accounts) {
     hideAlerts();
@@ -16,8 +17,21 @@ let refreshBalance = function(accounts) {
         $('#wallet_balance_output').text(web3.utils.fromWei(res, "ether"));
     });
     contractInstance.methods.getUser().call().then(function(res){
-        $('#winning_balance_output').text(web3.utils.fromWei(res[3], "ether"));
-        if (res[3] > 0) {
+        user.betting = res[0],
+        user.queryId = res[1],
+        user.wager   = res[2],
+        user.balance = res[3];
+        $('#winning_balance_output').text(web3.utils.fromWei(user.balance, "ether"));
+        if (user.betting) {
+            $('#betting_div').addClass('d-none');
+            $('#progress_detail').text(user.wager);
+            $('#progress_id').text(user.queryId);
+            $('#progress_alert').removeClass('d-none');
+        } else {
+            $('#betting_div').removeClass('d-none');
+            $('#progress_alert').addClass('d-none');
+        }
+        if (user.balance > 0) {
             $('#withdraw_button').removeClass('d-none');
         } else {
             $('#withdraw_button').addClass('d-none');
@@ -33,27 +47,32 @@ let refreshAccount = function(accounts) {
         contractInstance.events.userWin()
         .on('data', (event) => {
             console.log(event);
-            $('#win_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
-            $('#win_alert').show();
-            refreshBalance(accounts);
+            if (event.returnValues.queryId == user.queryId) {
+                $('#win_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
+                $('#win_alert').removeClass('d-none');
+                refreshBalance(accounts);
+            }
         })
         .on('error', console.error);
 
         contractInstance.events.userLose()
         .on('data', (event) => {
             console.log(event);
-            $('#lose_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
-            $('#lose_alert').show()
-            refreshBalance(accounts);
+            if (event.returnValues.queryId == user.queryId) {
+                $('#lose_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
+                $('#lose_alert').removeClass('d-none');
+                refreshBalance(accounts);
+            }
         })
         .on('error', console.error);
 }
 
 
 let hideAlerts = function(){
-    $('#win_alert').hide();
-    $('#lose_alert').hide();
-    $('#error_alert').hide();
+    $('#win_alert').addClass('d-none');
+    $('#lose_alert').addClass('d-none');
+    $('#error_alert').addClass('d-none');
+    $('#progress_alert').addClass('d-none');
 }
 
 $(document).ready(function() {
