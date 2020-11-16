@@ -1,14 +1,16 @@
 var web3 = new Web3(Web3.givenProvider);
 var contractInstance;
 let user = {};
+var accounts = [];
 
 window.ethereum.on('accountsChanged', function (accounts) {
     hideAlerts();
     refreshAccount(accounts);
-    refreshBalance(accounts);
+    refreshBalance();
 })
 
-let refreshBalance = function(accounts) {
+let refreshBalance = function() {
+    
     contractInstance.methods.poolBalance().call().then(function(res){
         $('#balance_output').text(web3.utils.fromWei(res, "ether"));
     });
@@ -39,10 +41,11 @@ let refreshBalance = function(accounts) {
     });
 }
 
-let refreshAccount = function(accounts) {
-    contractInstance = new web3.eth.Contract(abi, "0x1CE5879b90627d2A97c4B76A1fF31E8eA31B9183", {from: accounts[0]});
+let refreshAccount = function(newAccounts) {
+    accounts = newAccounts;
+    contractInstance = new web3.eth.Contract(abi, "0xfDfCe883d8Bbaf1C41df3a9730f6a87DD63C01Ed", {from: accounts[0]});
         console.log(contractInstance);
-        refreshBalance(accounts);
+        refreshBalance();
 
         contractInstance.events.userWin()
         .on('data', (event) => {
@@ -50,7 +53,7 @@ let refreshAccount = function(accounts) {
             if (event.returnValues.queryId == user.queryId) {
                 $('#win_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
                 $('#win_alert').removeClass('d-none');
-                refreshBalance(accounts);
+                refreshBalance();
             }
         })
         .on('error', console.error);
@@ -61,7 +64,7 @@ let refreshAccount = function(accounts) {
             if (event.returnValues.queryId == user.queryId) {
                 $('#lose_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
                 $('#lose_alert').removeClass('d-none');
-                refreshBalance(accounts);
+                refreshBalance();
             }
         })
         .on('error', console.error);
@@ -91,5 +94,14 @@ $(document).ready(function() {
                 console.log(receipt);
             })
         }
-    })
+    });
+
+    $('#withdraw_button').click(function() {
+        if (user.balance > 0) {
+            contractInstance.methods.withdrawUserBalance()
+            .send().then(function(){
+                refreshBalance();
+            });
+        }
+    });
 });

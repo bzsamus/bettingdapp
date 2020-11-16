@@ -62,6 +62,12 @@ var abi = [
     "inputs": [
       {
         "indexed": false,
+        "internalType": "bytes32",
+        "name": "queryId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
@@ -104,6 +110,12 @@ var abi = [
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "bytes32",
+        "name": "queryId",
+        "type": "bytes32"
+      },
       {
         "indexed": false,
         "internalType": "uint256",
