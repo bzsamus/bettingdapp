@@ -90,6 +90,7 @@ $(document).ready(function() {
         if(wager > 0) {
             $('#amount_input').prop('disabled', true);
             $('#place_bet_button').prop('disabled', true);
+            $('#place_bet_button').text('Placing Bet...');
             contractInstance.methods.placeBet()
             .send({value: wager})
             .on("receipt", function(receipt){
@@ -99,19 +100,27 @@ $(document).ready(function() {
             .then(function(){
                 $('#amount_input').prop('disabled', false);
                 $('#place_bet_button').prop('disabled', false);
+                $('#place_bet_button').text('Place Bet');
             })
             .catch(function(){
                 $('#amount_input').prop('disabled', false);
                 $('#place_bet_button').prop('disabled', false);
+                $('#place_bet_button').text('Place Bet');
             })
         }
     });
 
     $('#withdraw_button').click(function() {
         if (user.balance > 0) {
+            $('#withdraw_button').prop('disabled', true);
             contractInstance.methods.withdrawUserBalance()
-            .send().then(function(){
+            .send()
+            .then(function(){
                 refreshBalance();
+                $('#withdraw_button').prop('disabled', false);
+            })
+            .catch(function(){
+                $('#withdraw_button').prop('disabled', false);
             });
         }
     });
