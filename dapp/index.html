@@ -31,13 +31,13 @@
           </div>
         </div>
         <h2>Your account</h2>
-        <div id="win_alert" class="alert alert-success alert-dismissible fade d-none" role="alert">
-          <strong>Congradulation!</strong> You won <span id="win_amount">1</span> eth.
+        <div id="win_alert" class="alert alert-success alert-dismissible d-none" role="alert">
+          <strong>Congradulation!</strong> You won <span id="win_amount">0</span> eth.
         </div>
-        <div id="lose_alert" class="alert alert-warning alert-dismissible fade d-none" role="alert">
-          <strong>You lost</strong> <span id="lose_amount">1</span> eth. Better luck next time.
+        <div id="lose_alert" class="alert alert-warning alert-dismissible d-none" role="alert">
+          <strong>You lost</strong> <span id="lose_amount">0</span> eth. Better luck next time.
         </div>
-        <div id="error_alert" class="alert alert-danger alert-dismissible fade d-none" role="alert">
+        <div id="error_alert" class="alert alert-danger alert-dismissible d-none" role="alert">
           <strong>Error:</strong><span id="error_message"> there are some issues.</span>
         </div>
         <div class="container">
@@ -46,9 +46,9 @@
           Your winning balance: <span id="winning_balance_output"></span> eth <button type="button" id="withdraw_button" class="btn btn-primary d-none">Withdraw</button>
         </div>
         <div id="progress_alert" class="alert alert alert-info" role="alert">
-          <span id="progress_message"> You have already placed a bet, waiting for the result...</span><br/>
-          <span>Bet amount:</span><span id="progress_detail"></span><br/>
-          <span>Bet ID:</span><span id="progress_id"></span>
+          <span id="progress_message"> You have placed a bet, waiting for the result...</span><br/>
+          <span>Bet amount: </span><span id="progress_detail"></span> eth<br/>
+          <span>Bet ID: </span><span id="progress_id"></span>
         </div>
         <div id="betting_div">
           <h2>Place bet</h2>

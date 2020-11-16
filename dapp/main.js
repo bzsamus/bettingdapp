@@ -12,21 +12,21 @@ window.ethereum.on('accountsChanged', function (accounts) {
 let refreshBalance = function() {
     
     contractInstance.methods.poolBalance().call().then(function(res){
-        $('#balance_output').text(web3.utils.fromWei(res, "ether"));
+        $('#balance_output').text(web3.utils.fromWei(res, 'ether'));
     });
     web3.eth.getBalance(accounts[0]).then(function(res){
         $('#wallet_address_output').text(accounts[0]);
-        $('#wallet_balance_output').text(web3.utils.fromWei(res, "ether"));
+        $('#wallet_balance_output').text(web3.utils.fromWei(res, 'ether'));
     });
     contractInstance.methods.getUser().call().then(function(res){
         user.betting = res[0],
         user.queryId = res[1],
         user.wager   = res[2],
         user.balance = res[3];
-        $('#winning_balance_output').text(web3.utils.fromWei(user.balance, "ether"));
+        $('#winning_balance_output').text(web3.utils.fromWei(user.balance, 'ether'));
         if (user.betting) {
             $('#betting_div').addClass('d-none');
-            $('#progress_detail').text(user.wager);
+            $('#progress_detail').text(web3.utils.fromWei(user.wager, 'ether'));
             $('#progress_id').text(user.queryId);
             $('#progress_alert').removeClass('d-none');
         } else {
@@ -52,7 +52,7 @@ let refreshAccount = function(newAccounts) {
             console.log(event);
             if (event.returnValues.queryId == user.queryId) {
                 $('#win_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
-                $('#win_alert').removeClass('d-none');
+                $('#win_alert').removeClass('d-none').show();
                 refreshBalance();
             }
         })
@@ -63,7 +63,7 @@ let refreshAccount = function(newAccounts) {
             console.log(event);
             if (event.returnValues.queryId == user.queryId) {
                 $('#lose_amount').text(web3.utils.fromWei(event.returnValues.amount, "ether"));
-                $('#lose_alert').removeClass('d-none');
+                $('#lose_alert').removeClass('d-none').show();
                 refreshBalance();
             }
         })
@@ -88,10 +88,21 @@ $(document).ready(function() {
         hideAlerts();
         var wager = web3.utils.toWei($('#amount_input').val(), "ether");
         if(wager > 0) {
+            $('#amount_input').prop('disabled', true);
+            $('#place_bet_button').prop('disabled', true);
             contractInstance.methods.placeBet()
             .send({value: wager})
             .on("receipt", function(receipt){
                 console.log(receipt);
+                refreshBalance();
+            })
+            .then(function(){
+                $('#amount_input').prop('disabled', false);
+                $('#place_bet_button').prop('disabled', false);
+            })
+            .catch(function(){
+                $('#amount_input').prop('disabled', false);
+                $('#place_bet_button').prop('disabled', false);
             })
         }
     });
