@@ -184,7 +184,7 @@ contract Betting is Ownable, usingProvable {
         __callback(queryId, "60", bytes("test"));
     }
 
-    function deleteMe() public {
+    function deleteMe() public onlyOwner{
         selfdestruct(address(uint160(owner)));
     }
 }
