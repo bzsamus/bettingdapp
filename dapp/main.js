@@ -43,7 +43,7 @@ let refreshBalance = function() {
 
 let refreshAccount = function(newAccounts) {
     accounts = newAccounts;
-    contractInstance = new web3.eth.Contract(abi, "0xfDfCe883d8Bbaf1C41df3a9730f6a87DD63C01Ed", {from: accounts[0]});
+    contractInstance = new web3.eth.Contract(abi, "0x712e510B777983fc706Ff38E19F7288f4e77c469", {from: accounts[0]});
         console.log(contractInstance);
         refreshBalance();
 
