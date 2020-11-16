@@ -37,7 +37,7 @@ contract Betting is Ownable, usingProvable {
         if(user.queryId == _queryId && user.betting) {
             if (randomNumber > 50) {
                 userMapping[userAddress].balance += prize;
-                poolBalance -= prize;
+                poolBalance -= wager;
                 emit userWin(_queryId, prize);
             } else {
                 poolBalance += user.wager;
