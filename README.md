@@ -18,7 +18,7 @@
 
 ## Build and running
 
-###run npm install 
+### run npm install 
 ```
 > npm install
 ```
