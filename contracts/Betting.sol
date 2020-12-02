@@ -1,7 +1,8 @@
+import "@openzeppelin/contracts/math/SafeMath.sol";
 import "./Ownable.sol";
 import "./provableAPI.sol";
 
-pragma solidity 0.5.12;
+pragma solidity 0.6.2;
 
 contract Betting is Ownable, usingProvable {
     uint256 constant NUM_RANDOM_BYTES_REQUESTED = 1;
@@ -27,7 +28,7 @@ contract Betting is Ownable, usingProvable {
     event LogNewProvableQuery(string description);
     event generateRandomNumber(uint256 randomNumber);
 
-    function __callback(bytes32 _queryId, string memory _result, bytes memory proof) public {
+    function __callback(bytes32 _queryId, string memory _result, bytes memory proof) public override {
         require(msg.sender == provable_cbAddress());
         uint256 randomNumber = uint256(keccak256(abi.encodePacked(_result))) % 100;
         emit generateRandomNumber(randomNumber);
@@ -37,7 +38,7 @@ contract Betting is Ownable, usingProvable {
         if(user.queryId == _queryId && user.betting) {
             if (randomNumber > 50) {
                 userMapping[userAddress].balance += prize;
-                poolBalance -= wager;
+                poolBalance -= user.wager;
                 emit userWin(_queryId, prize);
             } else {
                 poolBalance += user.wager;
